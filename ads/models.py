@@ -25,6 +25,10 @@ class Ad(models.Model):
     content_type = models.CharField(
         max_length=256, null=True, blank=True, help_text='The MIMEType of the file')
 
+    # Favorites
+    favorites = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='Fav', related_name='favorite_ads')
+
     # Show up in the admin list
     def __str__(self) -> str:
         return self.title
@@ -46,3 +50,16 @@ class Comment(models.Model):
         if len(self.text) < 15:
             return self.text
         return self.text[:11] + '...'
+
+
+class Fav(models.Model):
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+
+    # https://docs.djangoproject.com/en/3.0/ref/models/options/#unique-together
+    class Meta:
+        unique_together = ('ad', 'user')
+
+    def __str__(self) -> str:
+        return f'{self.user.username} likes {self.ad.title[:10]}'
