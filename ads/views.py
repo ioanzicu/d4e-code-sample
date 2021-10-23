@@ -94,10 +94,15 @@ class AdCreateView(LoginRequiredMixin, View):
             context = {'form': form}
             return render(request, self.template_name, context)
 
-        # Add owner to the model before saving
+        # Pull the data from the form to the model and then save the model
+
+        # Add the model owner before saving
         ad = form.save(commit=False)
         ad.owner = self.request.user
         ad.save()
+
+        # https://django-taggit.readthedocs.io/en/latest/forms.html#commit-false
+        form.save_m2m()  # Save many to many - tags
         return redirect(self.success_url)
 
 
@@ -119,9 +124,14 @@ class AdUpdateView(LoginRequiredMixin, View):
             context = {'form': form}
             return render(reqeuest, self.template_name, context)
 
+        # Pull the data from the form to the model and then save the model
+
+        # Add the model owner before saving
         ad = form.save(commit=False)
         ad.save()
 
+        # https://django-taggit.readthedocs.io/en/latest/forms.html#commit-false
+        form.save_m2m()  # Save many to many - tags
         return redirect(self.success_url)
 
 

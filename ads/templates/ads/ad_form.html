@@ -9,6 +9,7 @@
     <input type="submit" value="Cancel" onclick="window.location.href='{% url 'ads:all' %}';return false;">
   </form>
 </p>
+<a href="{% url 'ads:all' %}">List all Ads</a>
 <!-- https://stackoverflow.com/questions/2472422/django-file-upload-size-limit -->
 <script>
 $("#upload_form").submit(function() {
